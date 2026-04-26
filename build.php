@@ -5,6 +5,12 @@ $msg = '';
 $msg_type = '';
 $engine = $_SESSION['engine'] ?? null;
 
+// Load from JSON if session is empty
+if (!$engine && file_exists('engines/last.json')) {
+    $engine = json_decode(file_get_contents('engines/last.json'), true);
+    $_SESSION['engine'] = $engine;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $company  = trim($_POST['company_name'] ?? '');
     $tagline  = trim($_POST['tagline']      ?? '');
@@ -29,7 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $slug = preg_replace('/[^a-z0-9]+/', '-', strtolower($company));
         $slug = trim($slug, '-');
-        $_SESSION['engine'] = [
+
+        $engineData = [
             'company_name'      => $company,
             'tagline'           => $tagline,
             'w_income'          => $w_income,
@@ -41,7 +48,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'threshold_hold'    => $threshold_hold,
             'slug'              => $slug,
         ];
-        $engine = $_SESSION['engine'];
+
+        // Save to session
+        $_SESSION['engine'] = $engineData;
+        $engine = $engineData;
+
+        // Save to JSON file so anyone can access it
+        if (!is_dir('engines')) mkdir('engines', 0755, true);
+        file_put_contents('engines/' . $slug . '.json', json_encode($engineData, JSON_PRETTY_PRINT));
+        file_put_contents('engines/last.json', json_encode($engineData, JSON_PRETTY_PRINT));
+
         $msg = "✅ Engine saved! Share the link below with the public.";
         $msg_type = "success";
     }
@@ -204,8 +220,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   <?php if($engine): ?>
   <div class="pub-box">
     <div class="pub-title">🟢 Your Engine is Live</div>
-    <div class="pub-url"><?= htmlspecialchars('http://' . $_SERVER['HTTP_HOST'] . '/' . $public_url) ?></div>
-    <a href="<?= $public_url ?>" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:var(--ink);color:#fff;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.84rem;padding:10px 22px;border-radius:2px;text-decoration:none">
+    <div class="pub-url"><?= htmlspecialchars('https://' . $_SERVER['HTTP_HOST'] . '/apply.php?slug=' . $engine['slug']) ?></div>
+    <a href="apply.php?slug=<?= $engine['slug'] ?>" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:var(--ink);color:#fff;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.84rem;padding:10px 22px;border-radius:2px;text-decoration:none">
       🔗 Open Public Page →
     </a>
   </div>
