@@ -56,7 +56,7 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Engine Builder · Credit Score Engine</title>
+<title>Credit Score Engine By Prajwal Manikantan</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -110,8 +110,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 </style>
 </head>
 <body>
+
 <div class="topbar">
-  <div class="logo">Credit<span>Score</span> Engine <span style="font-size:.5rem;color:var(--border);font-family:'DM Mono',monospace;margin-left:10px">/ Build</span></div>
+  <div class="logo">Credit<span>Score</span> Engine <span style="font-size:.7rem;color:var(--muted);font-family:'DM Sans',sans-serif;margin-left:8px;font-weight:300">By Prajwal Manikantan</span></div>
   <a href="index.php" class="nav-btn">← Home</a>
 </div>
 
@@ -142,11 +143,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="card-title">Scoring Factor Weightages &nbsp;<span style="font-weight:400;opacity:.5">must total 100</span></div>
       <?php
       $factors = [
-        ['w_income',     '💰 Income Stability',      'Net income ÷ gross income.',             $engine['w_income']     ?? 20],
-        ['w_dscr',       '⚖️ DSCR',                  'Net Income ÷ Total Debt Service.',        $engine['w_dscr']       ?? 30],
-        ['w_debt',       '💳 Existing Debt Load',    'Existing EMIs as % of income.',           $engine['w_debt']       ?? 20],
-        ['w_employment', '🏢 Employment Stability',  'Years of continuous employment.',         $engine['w_employment'] ?? 15],
-        ['w_repayment',  '📈 Repayment Track Record','Repayments completed ÷ loans taken.',    $engine['w_repayment']  ?? 15],
+        ['w_income',     '💰 Income Stability',      'Net income ÷ gross income.',          $engine['w_income']     ?? 20],
+        ['w_dscr',       '⚖️ DSCR',                  'Net Income ÷ Total Debt Service.',     $engine['w_dscr']       ?? 30],
+        ['w_debt',       '💳 Existing Debt Load',    'Existing EMIs as % of income.',        $engine['w_debt']       ?? 20],
+        ['w_employment', '🏢 Employment Stability',  'Years of continuous employment.',      $engine['w_employment'] ?? 15],
+        ['w_repayment',  '📈 Repayment Track Record','Repayments completed ÷ loans taken.', $engine['w_repayment']  ?? 15],
       ];
       foreach($factors as [$key, $label, $desc, $val]): ?>
       <div class="w-row">
