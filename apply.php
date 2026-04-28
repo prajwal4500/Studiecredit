@@ -108,11 +108,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 body{font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--ink);min-height:100vh}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;opacity:.25;pointer-events:none;z-index:0}
 .header{padding:44px 24px 0;max-width:700px;margin:0 auto;text-align:center;position:relative;z-index:1}
-.co-badge{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);display:inline-block;padding:4px 16px;border-radius:2px;margin-bottom:18px}
+.co-badge{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink);border:1px solid var(--ink);display:inline-block;padding:4px 16px;border-radius:2px;margin-bottom:18px;font-weight:500}
 .co-name{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(2rem,6vw,3rem);color:var(--ink);line-height:1.05;margin-bottom:8px;letter-spacing:-.03em}
-.co-name em{font-style:italic;color:var(--muted)}
-.co-tagline{font-size:.9rem;color:var(--muted);margin-bottom:6px;font-weight:300}
-.co-credit{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--border);letter-spacing:.15em;text-transform:uppercase;margin-bottom:36px}
+.co-name em{font-style:italic;color:var(--ink3)}
+.co-tagline{font-size:.9rem;color:var(--ink);margin-bottom:6px;font-weight:500}
+.co-credit{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--ink);letter-spacing:.15em;text-transform:uppercase;margin-bottom:36px;font-weight:500}
 .wrap{max-width:660px;margin:0 auto;padding:0 24px 80px;position:relative;z-index:1}
 .form-card{background:#fff;border:1px solid var(--border);border-radius:2px;padding:26px;margin-bottom:14px}
 .section-title{font-family:'DM Mono',monospace;font-size:.6rem;font-weight:500;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
@@ -181,7 +181,7 @@ $dec_texts = [
 ?>
 <div class="result-wrap">
   <div style="text-align:center;padding:36px 0 24px">
-    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:16px">Result for <?= h($applicant['name']) ?></div>
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--ink);letter-spacing:.15em;text-transform:uppercase;margin-bottom:16px;font-weight:500">Result for <?= h($applicant['name']) ?></div>
     <div class="score-circle <?= $sc_class ?>">
       <div class="score-num" style="color:<?= $dec_color ?>"><?= $result['score'] ?></div>
       <div class="score-sub">out of 100</div>
@@ -316,6 +316,6 @@ $dec_texts = [
 </div>
 <?php endif; ?>
 
-<div class="footer">Powered by <?= strtoupper(h($engine['company_name'])) ?> &nbsp;·&nbsp; Student FinTech Simulator</div>
+<div class="footer">Powered by <?= strtoupper(h($engine['company_name'])) ?> &nbsp;·&nbsp; Student FinTech Simulator · By Prajwal Manikantan</div>
 </body>
 </html>
