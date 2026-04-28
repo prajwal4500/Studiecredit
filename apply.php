@@ -1,26 +1,53 @@
 <?php
 session_start();
 
-$slug = trim($_GET['slug'] ?? '');
+/*
+|--------------------------------------------------------------------------
+| Professional URL Support
+|--------------------------------------------------------------------------
+| Supports BOTH:
+| /apply/studiecredit
+| apply.php?slug=studiecredit
+|--------------------------------------------------------------------------
+*/
+
+$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$requestUri = trim($requestUri, '/');
+
+$slug = '';
+
+if (preg_match('#^apply/([a-zA-Z0-9_-]+)$#', $requestUri, $matches)) {
+    $slug = $matches[1];
+} else {
+    $slug = trim($_GET['slug'] ?? '');
+}
+
+$slug = strtolower(preg_replace('/[^a-z0-9_-]/', '', $slug));
 
 $engine = null;
-$jsonFile = 'engines/' . preg_replace('/[^a-z0-9\-]/', '', $slug) . '.json';
+$jsonFile = __DIR__ . '/engines/' . $slug . '.json';
 
 if ($slug && file_exists($jsonFile)) {
     $engine = json_decode(file_get_contents($jsonFile), true);
 } elseif (!empty($_SESSION['engine'])) {
     $engine = $_SESSION['engine'];
-} elseif (file_exists('engines/last.json')) {
-    $engine = json_decode(file_get_contents('engines/last.json'), true);
+} elseif (file_exists(__DIR__ . '/engines/last.json')) {
+    $engine = json_decode(file_get_contents(__DIR__ . '/engines/last.json'), true);
 }
 
 if (!$engine) {
-    header('Location: build.php');
+    header('Location: /build.php');
     exit;
 }
 
-function h($s) { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
-function fmt($n) { return '€' . number_format((float)$n, 0, '.', ','); }
+function h($s) {
+    return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
+}
+
+function fmt($n) {
+    return '€' . number_format((float)$n, 0, '.', ',');
+}
+
 
 function score_applicant(array $engine, array $input): array {
     $income      = max(0, (float)$input['monthly_income']);
