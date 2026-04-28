@@ -3,7 +3,6 @@ session_start();
 
 $slug = trim($_GET['slug'] ?? '');
 
-// Load engine from JSON file first (works for anyone)
 $engine = null;
 $jsonFile = 'engines/' . preg_replace('/[^a-z0-9\-]/', '', $slug) . '.json';
 
@@ -104,56 +103,89 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#ffffff;--bg2:#f7f7f5;--ink:#0a0a0a;--ink2:#1a1a1a;--ink3:#444;--muted:#888;--border:#e0ddd8;--green:#16a34a;--red:#dc2626;--amber:#d97706;--green-bg:rgba(22,163,74,.07);--green-border:rgba(22,163,74,.25);--red-bg:rgba(220,38,38,.07);--red-border:rgba(220,38,38,.25);--amber-bg:rgba(217,119,6,.07);--amber-border:rgba(217,119,6,.25);}
+:root{
+  --bg:#ffffff;
+  --bg2:#f7f7f5;
+  --ink:#0a0a0a;
+  --ink2:#1a1a1a;
+  --ink3:#222;
+  --muted:#444;
+  --border:#d0cdc8;
+  --green:#16a34a;
+  --red:#dc2626;
+  --amber:#d97706;
+  --green-bg:rgba(22,163,74,.07);
+  --green-border:rgba(22,163,74,.25);
+  --red-bg:rgba(220,38,38,.07);
+  --red-border:rgba(220,38,38,.25);
+  --amber-bg:rgba(217,119,6,.07);
+  --amber-border:rgba(217,119,6,.25);
+}
 body{font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--ink);min-height:100vh}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;opacity:.25;pointer-events:none;z-index:0}
+
 .header{padding:44px 24px 0;max-width:700px;margin:0 auto;text-align:center;position:relative;z-index:1}
-.co-badge{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink);border:1px solid var(--ink);display:inline-block;padding:4px 16px;border-radius:2px;margin-bottom:18px;font-weight:500}
-.co-name{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(2rem,6vw,3rem);color:var(--ink);line-height:1.05;margin-bottom:8px;letter-spacing:-.03em}
-.co-name em{font-style:italic;color:var(--ink3)}
-.co-tagline{font-size:.9rem;color:var(--ink);margin-bottom:6px;font-weight:500}
-.co-credit{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--ink);letter-spacing:.15em;text-transform:uppercase;margin-bottom:36px;font-weight:500}
+.co-badge{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink);border:1.5px solid var(--ink);display:inline-block;padding:5px 18px;border-radius:2px;margin-bottom:18px;font-weight:500}
+.co-name{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(2rem,6vw,3rem);
+  color:var(--ink);line-height:1.05;margin-bottom:8px;letter-spacing:-.03em}
+.co-name em{font-style:italic;color:var(--ink2)}
+.co-tagline{font-size:.95rem;color:var(--ink);margin-bottom:6px;font-weight:500}
+.co-credit{font-family:'DM Sans',monospace;font-size:.72rem;color:var(--ink);
+  letter-spacing:.05em;margin-bottom:36px;font-weight:600}
+
 .wrap{max-width:660px;margin:0 auto;padding:0 24px 80px;position:relative;z-index:1}
 .form-card{background:#fff;border:1px solid var(--border);border-radius:2px;padding:26px;margin-bottom:14px}
-.section-title{font-family:'DM Mono',monospace;font-size:.6rem;font-weight:500;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.section-title{font-family:'DM Mono',monospace;font-size:.68rem;font-weight:600;color:var(--ink);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--ink)}
 .fg{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.fg label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
-.fg input{background:#fff;border:1.5px solid var(--border);border-radius:2px;color:var(--ink);padding:12px 14px;font-size:.9rem;outline:none;transition:.2s;font-family:'DM Sans',sans-serif}
-.fg input:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(10,10,10,.06)}
-.fg .note{font-size:.7rem;color:var(--muted);line-height:1.5;margin-top:2px;font-weight:300}
+.fg label{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--ink);letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+.fg input{background:#fff;border:1.5px solid var(--border);border-radius:2px;color:var(--ink);
+  padding:12px 14px;font-size:.9rem;outline:none;transition:.2s;font-family:'DM Sans',sans-serif}
+.fg input:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(10,10,10,.08)}
+.fg .note{font-size:.74rem;color:var(--ink3);line-height:1.5;margin-top:2px;font-weight:400}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:520px){.two-col{grid-template-columns:1fr}}
-.submit-btn{width:100%;padding:15px;background:var(--ink);color:#fff;border:none;border-radius:2px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.9rem;cursor:pointer;transition:.15s}
+.submit-btn{width:100%;padding:15px;background:var(--ink);color:#fff;border:none;border-radius:2px;
+  font-family:'DM Sans',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:.15s;letter-spacing:.03em}
 .submit-btn:hover{background:var(--ink2)}
-.errors{background:var(--red-bg);border:1px solid var(--red-border);border-radius:2px;padding:12px 16px;margin-bottom:16px;font-size:.82rem;color:var(--red);line-height:1.8}
+.errors{background:var(--red-bg);border:1px solid var(--red-border);border-radius:2px;
+  padding:12px 16px;margin-bottom:16px;font-size:.82rem;color:var(--red);line-height:1.8}
+
 .result-wrap{max-width:660px;margin:0 auto;padding:0 24px 80px;position:relative;z-index:1}
-.score-circle{width:148px;height:148px;border-radius:50%;margin:0 auto 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid}
+.score-circle{width:148px;height:148px;border-radius:50%;margin:0 auto 22px;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;border:3px solid}
 .sc-a{background:var(--green-bg);border-color:var(--green)}
 .sc-h{background:var(--amber-bg);border-color:var(--amber)}
 .sc-r{background:var(--red-bg);border-color:var(--red)}
 .score-num{font-family:'Playfair Display',serif;font-weight:900;font-size:3rem;line-height:1}
-.score-sub{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--muted);margin-top:4px;letter-spacing:.1em}
+.score-sub{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--ink);margin-top:4px;letter-spacing:.1em;font-weight:500}
 .decision{font-family:'Playfair Display',serif;font-weight:900;font-size:1.5rem;text-align:center;margin-bottom:8px}
 .d-a{color:var(--green)}.d-h{color:var(--amber)}.d-r{color:var(--red)}
-.decision-desc{font-size:.84rem;color:var(--muted);text-align:center;max-width:420px;margin:0 auto 28px;line-height:1.8;font-weight:300}
+.decision-desc{font-size:.88rem;color:var(--ink);text-align:center;max-width:420px;
+  margin:0 auto 28px;line-height:1.8;font-weight:500}
 .breakdown{background:#fff;border:1px solid var(--border);border-radius:2px;padding:22px;margin-bottom:14px}
-.bd-title{font-family:'DM Mono',monospace;font-size:.6rem;font-weight:500;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:16px}
+.bd-title{font-family:'DM Mono',monospace;font-size:.65rem;font-weight:600;color:var(--ink);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--ink)}
 .factor-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.f-label{font-size:.76rem;color:var(--ink3);width:165px;flex-shrink:0;line-height:1.4;font-weight:500}
-.f-label-note{font-size:.62rem;color:var(--muted);margin-top:1px;font-weight:300}
-.f-bar{flex:1;height:4px;background:var(--border);border-radius:99px;overflow:hidden}
+.f-label{font-size:.78rem;color:var(--ink);width:165px;flex-shrink:0;line-height:1.4;font-weight:600}
+.f-label-note{font-size:.64rem;color:var(--ink3);margin-top:1px;font-weight:400}
+.f-bar{flex:1;height:5px;background:var(--border);border-radius:99px;overflow:hidden}
 .f-fill{height:100%;border-radius:99px;background:var(--ink)}
-.f-score{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--ink3);width:34px;text-align:right}
-.f-pts{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);width:44px;text-align:right}
+.f-score{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--ink);width:34px;text-align:right;font-weight:600}
+.f-pts{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--ink3);width:44px;text-align:right}
 .summary{background:var(--bg2);border-radius:2px;padding:16px;margin:12px 0;border:1px solid var(--border)}
-.s-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.8rem}
+.s-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.82rem}
 .s-row:last-child{border:none}
-.s-key{color:var(--muted);font-weight:300}
-.s-val{font-family:'DM Mono',monospace;color:var(--ink);font-size:.76rem}
-.disclaimer{background:var(--bg2);border:1px solid var(--border);border-radius:2px;padding:14px 18px;font-size:.74rem;color:var(--muted);line-height:1.85;text-align:center;margin-bottom:14px;font-weight:300}
-.try-again{width:100%;padding:13px;background:transparent;color:var(--ink);border:1.5px solid var(--border);border-radius:2px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.86rem;cursor:pointer;transition:.15s}
-.try-again:hover{border-color:var(--ink)}
-.footer{text-align:center;padding:20px;font-family:'DM Mono',monospace;font-size:.5rem;color:var(--border);letter-spacing:.18em;text-transform:uppercase;position:relative;z-index:1}
+.s-key{color:var(--ink);font-weight:500}
+.s-val{font-family:'DM Mono',monospace;color:var(--ink);font-size:.78rem;font-weight:600}
+.disclaimer{background:var(--bg2);border:1.5px solid var(--border);border-radius:2px;
+  padding:14px 18px;font-size:.76rem;color:var(--ink3);line-height:1.85;text-align:center;margin-bottom:14px;font-weight:400}
+.try-again{width:100%;padding:13px;background:transparent;color:var(--ink);border:1.5px solid var(--ink);
+  border-radius:2px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.86rem;cursor:pointer;transition:.15s}
+.try-again:hover{background:var(--ink);color:#fff}
+.footer{text-align:center;padding:20px;font-family:'DM Mono',monospace;font-size:.58rem;
+  color:var(--ink);letter-spacing:.15em;text-transform:uppercase;position:relative;z-index:1;font-weight:500}
 </style>
 </head>
 <body>
@@ -174,14 +206,15 @@ $sc_class = ['Approve'=>'sc-a','Hold'=>'sc-h','Reject'=>'sc-r'][$dec];
 $dc_class = ['Approve'=>'d-a','Hold'=>'d-h','Reject'=>'d-r'][$dec];
 $dec_color = ['Approve'=>'var(--green)','Hold'=>'var(--amber)','Reject'=>'var(--red)'][$dec];
 $dec_texts = [
-    'Approve' => ['✅ Approved',      'Your financial profile meets this engine\'s creditworthiness criteria.'],
-    'Hold'    => ['⏸ Under Review',  'Your profile shows mixed signals. Further documentation may be needed.'],
-    'Reject'  => ['❌ Not Approved',  'Your profile does not meet this engine\'s thresholds at this time.'],
+    'Approve' => ['✅ Approved',     'Your financial profile meets this engine\'s creditworthiness criteria.'],
+    'Hold'    => ['⏸ Under Review', 'Your profile shows mixed signals. Further documentation may be needed.'],
+    'Reject'  => ['❌ Not Approved', 'Your profile does not meet this engine\'s thresholds at this time.'],
 ];
 ?>
 <div class="result-wrap">
   <div style="text-align:center;padding:36px 0 24px">
-    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--ink);letter-spacing:.15em;text-transform:uppercase;margin-bottom:16px;font-weight:500">Result for <?= h($applicant['name']) ?></div>
+    <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--ink);font-weight:600;
+      letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px">Result for <?= h($applicant['name']) ?></div>
     <div class="score-circle <?= $sc_class ?>">
       <div class="score-num" style="color:<?= $dec_color ?>"><?= $result['score'] ?></div>
       <div class="score-sub">out of 100</div>
@@ -210,11 +243,11 @@ $dec_texts = [
       <div class="f-pts">+<?= $contribution ?>pt</div>
     </div>
     <?php endforeach; ?>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
-      <span style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">Final Score</span>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:2px solid var(--ink)">
+      <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--ink);font-weight:600;letter-spacing:.1em;text-transform:uppercase">Final Score</span>
       <span style="font-family:'Playfair Display',serif;font-weight:900;font-size:1.8rem;color:<?= $dec_color ?>"><?= $result['score'] ?> / 100</span>
     </div>
-    <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);margin-top:6px">
+    <div style="font-family:'DM Mono',monospace;font-size:.64rem;color:var(--ink);margin-top:6px;font-weight:500">
       Approve ≥ <?= $engine['threshold_approve'] ?> &nbsp;|&nbsp; Hold ≥ <?= $engine['threshold_hold'] ?> &nbsp;|&nbsp; Reject &lt; <?= $engine['threshold_hold'] ?>
     </div>
   </div>
@@ -240,7 +273,7 @@ $dec_texts = [
     </div>
   </div>
 
-  <div class="disclaimer">⚠️ <strong style="color:var(--ink3)">Simulation Disclaimer</strong><br>This is a student-built simulator. Not real financial advice. No data is retained.</div>
+  <div class="disclaimer">⚠️ <strong style="color:var(--ink)">Simulation Disclaimer</strong><br>This is a student-built simulator. Not real financial advice. No data is retained.</div>
   <button class="try-again" onclick="location.href=location.href">← Try Another Scenario</button>
 </div>
 
@@ -310,7 +343,7 @@ $dec_texts = [
       </div>
     </div>
 
-    <div class="disclaimer">⚠️ This is a student simulation. No data is stored. Not a real credit check.</div>
+    <div class="disclaimer">⚠️ <strong style="color:var(--ink)">Note:</strong> This is a student simulation. No data is stored. Not a real credit check.</div>
     <button type="submit" class="submit-btn">Check My Score with <?= h($engine['company_name']) ?> →</button>
   </form>
 </div>
